@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",               
+    "module": "NodeNext",              
+    "lib": ["ES2022"],                  
+    "outDir": "./dist",                 
+    "rootDir": "./src",                  
+    "strict": true,                      
+    "esModuleInterop": true,              
+    "skipLibCheck": true,                
+    "forceConsistentCasingInFileNames": true, 
+    "resolveJsonModule": true,             
+    "moduleResolution": "NodeNext",            
+    "removeComments": true,                
+    "allowSyntheticDefaultImports": true,  
+
+    // Настройки для TypeORM
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    
+    "noUnusedLocals": true,                // Ошибка при неиспользуемых локальных переменных
+    "noUnusedParameters": true,             // Ошибка при неиспользуемых параметрах
+    "noImplicitReturns": true,              // Ошибка, если функция не всегда возвращает значение
+    "noFallthroughCasesInSwitch": true      // Ошибка при проваливании в switch
+  },
+  "include": ["src/**/*"],                  
+  "exclude": ["node_modules", "dist"]       
+}
