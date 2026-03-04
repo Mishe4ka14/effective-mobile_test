@@ -26,7 +26,7 @@ export class AuthController {
             throw new AppError(ERROR_MESSAGES.INVALID_DATE, StatusCodes.BAD_REQUEST);
         }
         
-        const newUser = await authService.register({
+        const { token, user } = await authService.register({
             fullName,
             birthDate: birthDateObj,
             email,
@@ -35,7 +35,8 @@ export class AuthController {
         
         res.status(StatusCodes.CREATED).json({
             message: 'Пользователь успешно зарегистрирован',
-            user: newUser
+            token,
+            user
         });
     }
 

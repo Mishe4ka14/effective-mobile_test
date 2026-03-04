@@ -5,24 +5,13 @@ import { generateToken } from '../utils/jwt.util.js';
 import { ERROR_MESSAGES } from '../constants/error-messages.constants.js';
 import { AppError } from '../middlewares/error.middleware.js';
 import { StatusCodes } from 'http-status-codes';
+import { RegisterUserData, LoginUserData, AuthResponse, UserWithoutPassword } from '../types/user.types.js';
 
-export interface RegisterUserData {
-    fullName: string;
-    birthDate: Date;
-    email: string;
-    password: string;
-}
-
-export interface LoginUserData {
-    email: string;
-    password: string;
-}
-
-export class AuthService {
+class AuthService {
 
     // РЕГИСТРАЦИЯ
 
-    async register(userData: RegisterUserData): Promise<Omit<User, 'password'>> {
+    async register(userData: RegisterUserData): Promise<AuthResponse> {
         const userRepository = AppDataSource.getRepository(User);
         
         //проверяем есть ли юзер
@@ -47,13 +36,25 @@ export class AuthService {
         });
         
         const savedUser = await userRepository.save(newUser);
+
+        // Генерируем токен чтобы пользователь сразу был авторизован
+        const token = generateToken({
+            userId: savedUser.id,
+            email: savedUser.email,
+            role: savedUser.role
+        });
+
         const { password, ...userWithoutPassword } = savedUser;
-        return userWithoutPassword;
+
+        return {
+            token,
+            user: userWithoutPassword
+        };
     }
 
     //АВТОРИЗАЦИЯ
 
-    async login(loginData: LoginUserData): Promise<{ token: string; user: Omit<User, 'password'> }> {
+    async login(loginData: LoginUserData): Promise<{ token: string; user: UserWithoutPassword }> {
         const userRepository = AppDataSource.getRepository(User);
         
         //проверяем есть ли юзер
